@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+	<sql id="search">
+		<where>
+			<if test="searchType != null">
+				<if test="searchType == 'i'.toString()">
+					and u_id like CONCAT('%', #{keyword}, '%')
+				</if>
+				<if test="searchType == 'n'.toString()">
+					and uname like CONCAT('%', #{keyword}, '%')
+				</if>
+				<if test="searchType == 'r'.toString()">
+					and regdate like CONCAT('%', #{keyword}, '%')
+				</if>
+				<if test="searchType == 'ir'.toString()">
+					and ( u_id like CONCAT('%', #{keyword}, '%')
+					OR regdate
+					like CONCAT('%', #{keyword}, '%'))
+				</if>
+				<if test="searchType == 'in'.toString()">
+					and ( u_id like CONCAT('%', #{keyword}, '%')
+					OR uname
+					like CONCAT('%', #{keyword}, '%'))
+				</if>
+				<if test="searchType == 'nr'.toString()">
+					and ( uname like CONCAT('%', #{keyword}, '%')
+					OR regdate
+					like CONCAT('%', #{keyword}, '%'))
+				</if>
+				<if test="searchType == 'inr'.toString()">
+					and ( u_id like CONCAT('%', #{keyword}, '%')
+					OR
+					uname
+					like
+					CONCAT('%', #{keyword}, '%')
+					OR
+					regdate like CONCAT('%', #{keyword},
+					'%'))
+				</if>
+			</if>
+		</where>
+	</sql>
+	<select id="userList" resultType="UserVO">
+		SELECT u_id, uname, email, birth, regdate, grade, upoint
+		FROM tbl_user
+
+		<include refid="search" />
+
+		order by regdate desc
+		limit #{pageStart}, #{perPageNum}
+
+	</select>
+
+	<select id="totalCount" resultType="int">
+		select count(*)
+		from tbl_user
+		<include refid="search" />
+	</select>
+
+	<select id="login" resultType="UserVO">
+		select u_id, upw, uname from
+		tbl_user where u_id = #{u_id} and upw = #{upw}
+	</select>
+
+	<update id="keepLogin">
+		update tbl_user set
+		sessionKey = #{sessionId},
+		sessionlimit = #{next}
+		where u_id = #{u_id}
+	</update>
+
+	<select id="checkUserWithSessionKey" resultType="UserVO">
+		select * from
+		tbl_user where sessionKey = #{value} and sessionlimit > now()
+	</select>
+
+	<select id="retrieveUser" parameterType="string" resultType="UserVO">
+		<![CDATA[
+			select * from tbl_user where u_id= #{id}
+		]]>
+	</select>
+
+	<select id="retrieveMail" parameterType="String" resultType="UserVO">
+		<![CDATA[
+			select * from tbl_user where email= #{email}
+		]]>
+	</select>
+
+	<insert id="createUser" parameterType="UserVO">
+		insert into tbl_user(
+		u_id, upw, uname, email, userImage, birth, postNum, phoneCd,
+		phoneNum,
+		address1, address2)
+		values(
+		#{u_id}, #{upw}, #{uname}, #{email},
+		#{userImage}, #{birth}, #{postNum}
+		, #{phoneCd}, #{phoneNum},
+		#{address1}, #{address2})
+	</insert>
+
+	<update id="updateUser" parameterType="UserVO">
+		update tbl_user
+		set email= #{email}
+		, userImage = #{userImage}
+		, birth = #{birth}
+		, postNum = #{postNum}
+		, phoneCd = #{phoneCd}
+		, phoneNum = #{phoneNum}
+		, address1 = #{address1}
+		, address2 = #{address2}
+		WHERE u_id = #{u_id}
+	</update>
+	
+	<select id="retrieveUserId" resultType="String">
+		select u_id from tbl_user
+		where email = #{email}
+	</select>
+	
+	<select id="retrieveUserPw" resultType="String">
+		select upw from tbl_user
+		where u_id = #{id} and email = #{email}
+	</select>
+
+	<select id="getGrade" resultType="string">
+		select grade from tbl_user
+		where u_id = #{u_id}
+	</select>
+
+	<update id="upgrade">
+		update tbl_user
+		set
+		grade = 'M'
+		where u_id = #{u_id}
+	</update>
+
+	<delete id="bye">
+		delete from tbl_user where u_id = #{u_id}
+	</delete>
+
+	<update id="upSchedular">
+		update tbl_user
+		set
+		grade = 'M'
+    		<![CDATA[	
+		where grade = 'N' and upoint >= 100; 
+		]]>
+	</update>
+	
+	<select id="passChk" resultType="Boolean">
+		select count(*) from tbl_user
+		where u_id = #{id} and upw = #{pass}
+	</select>
+</mapper>

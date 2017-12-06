@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+	
+	<insert id="create">
+		insert into tbl_board (title, content, writer, categorycd, thumb)
+		values(#{title},#{content}, #{writer}, #{categorycd}, #{thumb})
+	</insert>
+
+	<select id="read" resultType="BoardVO">
+		select
+		bno, title, content, writer, categorycd,
+		regdate, viewcnt , replycnt, thumb
+		from
+		tbl_board
+		where bno = #{bno}
+	</select>
+
+	<update id="update">
+		update tbl_board 
+		set 
+			title = #{title}, 
+			content = #{content}
+		<if test="categorycd == 'M'.toString()">	
+			,thumb = #{thumb}
+		</if>	
+		where bno = #{bno}
+	</update>
+
+	<delete id="delete">
+		delete from tbl_board where bno = #{bno}
+	</delete>
+
+	<sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 't'.toString()">
+				and title like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'c'.toString()">
+				and content like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'w'.toString()">
+				and writer like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'tc'.toString()">
+				and ( title like CONCAT('%', #{keyword}, '%') OR content
+				like
+				CONCAT('%', #{keyword}, '%'))
+			</if>
+			<if test="searchType == 'cw'.toString()">
+				and ( content like CONCAT('%', #{keyword}, '%') OR writer
+				like
+				CONCAT('%', #{keyword}, '%'))
+			</if>
+			<if test="searchType == 'tcw'.toString()">
+				and ( title like CONCAT('%', #{keyword}, '%')
+				OR
+				content
+				like CONCAT('%', #{keyword}, '%')
+				OR
+				writer like CONCAT('%',
+				#{keyword}, '%'))
+			</if>
+		</if>
+	</sql>
+	
+	<select id="list" resultType="BoardVO">
+		<![CDATA[  
+		  SELECT board.bno, board.title, board.content, board.writer, board.categorycd 
+			     , (SELECT comm_cd_name FROM tbl_code 
+                    WHERE comm_code = "code0101" 
+                    AND COMM_CD = board.categorycd) AS categoryname
+			     , board.regdate, board.viewcnt, board.replycnt, board.thumb
+			FROM   tbl_board board
+			WHERE 1=1
+				AND categorycd = #{category}
+		]]>
+
+		<include refid="search"></include>
+		
+		<![CDATA[    
+		  order by bno desc
+		  limit #{pageStart}, #{perPageNum}
+		]]>
+	</select>
+	
+	<select id="liveList" resultType="map">
+	<![CDATA[  
+		SELECT board.bno, board.title, board.content, board.writer, board.categorycd 
+				, (SELECT comm_cd_name FROM tbl_code 
+                    WHERE comm_code = "code0101" 
+                    AND COMM_CD = board.categorycd) AS categoryname
+			    , board.regdate, board.viewcnt, board.replycnt, board.thumb
+			    , attach.fullname
+		FROM tbl_board board inner join tbl_attach attach
+				 on board.bno = attach.bno	
+		WHERE 1=1
+		AND categorycd = #{category}
+		]]>
+
+		<include refid="search"></include>
+		
+		<![CDATA[    
+		  order by bno desc
+		  limit #{pageStart}, #{perPageNum}
+		]]>
+	</select>
+	
+	<select id="listSearchCount" resultType="int">
+		<![CDATA[  
+		  select count(bno) 
+		  from tbl_board 
+		  where bno > 0 and categorycd = #{category}
+		]]>
+		<include refid="search"></include>
+	</select>
+
+
+
+	<update id="updateReplyCnt">
+		update tbl_board set replycnt = replycnt + #{amount} where bno = #{bno}
+	</update>
+
+
+	<update id="updateViewCnt">
+		update tbl_board set viewcnt = viewcnt +1 where bno = #{bno}
+	</update>
+
+	<insert id="addAttach">
+		insert into tbl_attach(fullname, bno) values (#{fileName}, #{bno})
+	</insert>
+
+
+	<select id="getAttach" resultType="string">
+		select fullname from tbl_attach where bno = #{bno} order by regdate
+	</select>
+
+
+	<delete id="deleteAttach">
+		delete from tbl_attach where bno = #{bno}
+	</delete>
+
+	<insert id="replaceAttach">
+		insert into tbl_attach(fullname, bno) values (#{fullName}, #{bno})
+	</insert>
+	
+	<select id="categoryList" resultType="Map">
+		SELECT t.categorycd
+			FROM
+			(
+			  SELECT categorycd
+			  FROM tbl_board
+			  WHERE 1=1
+			  AND categorycd = 'N'
+			  ORDER BY regdate DESC limit 1
+			) t
+			UNION ALL
+			SELECT t.categorycd
+			FROM
+			(
+			  SELECT categorycd
+			  FROM tbl_board
+			  WHERE 1=1
+			  AND categorycd = 'H'
+			  ORDER BY regdate DESC limit 1
+			) t
+						UNION ALL
+			SELECT t.categorycd
+			FROM
+			(
+			  SELECT categorycd
+			  FROM tbl_board
+			  WHERE 1=1
+			  AND categorycd = 'M'
+			  ORDER BY regdate DESC limit 1
+			) t
+						UNION ALL
+			SELECT t.categorycd
+			FROM
+			(
+			  SELECT categorycd
+			  FROM tbl_board
+			  WHERE 1=1
+			  AND categorycd = 'A'
+			  ORDER BY regdate DESC limit 1
+			) t
+						UNION ALL
+			SELECT t.categorycd
+			FROM
+			(
+			  SELECT categorycd
+			  FROM tbl_board
+			  WHERE 1=1
+			  AND categorycd = 'I'
+			  ORDER BY regdate DESC limit 1
+			) t;
+	</select>
+	
+	<select id="listTop" resultType="int">
+		select bno from tbl_board where title = #{title}
+	</select>
+	
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="gbook">
+	<update id="upAnsnum">
+		update tbl_gbook
+		set
+		ansnum = ansnum+1
+		where grpno = #{grpno} and ansnum > 0;
+	</update>
+	
+	<insert id="commentMember">
+		insert into tbl_gbook(writer, content, grpno, ansnum) 
+		values(#{writer},#{content},#{grpno},#{ansnum}+1);
+	</insert>
+	
+	<insert id="commentGuest">
+		insert into tbl_gbook(writer,content,pass, grpno,ansnum) 
+		values(#{writer},#{content},#{pass},#{grpno},#{ansnum}+1);
+	</insert>
+
+	<insert id="createMember" parameterType="GuestBookVO">
+		insert into
+		tbl_gbook(content, writer, grpno)
+		values(#{content}, #{writer}, 
+		(select ifnull(max(grpno),0)+1 grpno
+		from tbl_gbook gbook))
+	</insert>
+
+	<insert id="createGuest" parameterType="GuestBookVO">
+		insert into
+		tbl_gbook(content, writer,pass, grpno)
+		values(#{content}, #{writer}, #{pass}, 
+		(select ifnull(max(grpno),0)+1 grpno from tbl_gbook gbook))
+	</insert>
+	
+	<select id="commentRead" resultType="GuestBookVO">
+		select writer, content, pass from tbl_gbook
+		where gbno = #{gbno}
+	</select>
+	
+	<update id="updateComment" parameterType="map"> 
+		update tbl_gbook
+		set
+			content = #{content}
+		where gbno = #{gbno}	
+	</update>
+	
+	<sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 'c'.toString()">
+				and content like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'w'.toString()">
+				and writer like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'cw'.toString()">
+				and ( content like CONCAT('%', #{keyword}, '%')
+				OR
+				writer like CONCAT('%', #{keyword}, '%'))
+			</if>
+		</if>
+	</sql>
+
+	<select id="listCriteria" resultType="GuestBookVO">
+	<![CDATA[
+		select 
+		gbno, content, writer, date_format(regdate, '%y-%m-%d %h:%i:%s') regdate, grpno, ansnum, commentcnt
+		from 
+		tbl_gbook
+		where gbno > 0 
+	]]>
+
+		<include refid="search"></include>
+
+		order by grpno desc, gbno, ansnum
+		limit #{pageStart}, #{perPageNum}
+	</select>
+
+	<select id="total" resultType="int">
+	<![CDATA[
+		select count(gbno) from tbl_gbook
+		where gbno > 0 
+	]]>
+
+		<include refid="search"></include>
+
+	</select>
+
+	<delete id="delete">
+		delete from tbl_gbook where gbno = #{gbno}
+	</delete>
+
+	<select id="passCheck" parameterType="Map" resultType="Boolean">
+		select count(gbno) from
+		tbl_gbook
+		where gbno = #{gbno} and pass = #{pass}
+	</select>
+	
+	<select id="getGrpno" parameterType="Int" resultType="Int">
+		select grpno from tbl_gbook
+		where gbno = #{gbno}
+	</select>
+	
+	<update id="upCommentCount" parameterType="Int">
+		update tbl_gbook 
+		set commentcnt = commentcnt + 1 
+		where grpno = #{grpno} and ansnum = 0;
+	</update>
+	
+	<update id="zeroIndex">
+		set @count:=0;
+	</update>
+	
+	<update id="setIndex">
+		UPDATE `tbl_gbook` SET `tbl_gbook`.`gbno` = @COUNT:=@COUNT+1;
+	</update>
+</mapper>
