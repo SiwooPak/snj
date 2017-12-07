@@ -2,7 +2,9 @@
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -45,14 +47,12 @@
 			value="/Volumes/second/sts-bundle/study/workspace/snj/src/main/webapp/resources/img/down">
 		</beans:constructor-arg>
 	</beans:bean>
-	
+
 	<!-- Hosting -->
-	<!-- <beans:bean id="uploadPath" class="java.lang.String">
-		<beans:constructor-arg
-			value="/home/hosting_users/siwoo1620/tomcat/webapps/ROOT/down">
-		</beans:constructor-arg>
-	</beans:bean> -->
-	
+	<!-- <beans:bean id="uploadPath" class="java.lang.String"> <beans:constructor-arg 
+		value="/home/hosting_users/siwoo1620/tomcat/webapps/ROOT/down"> </beans:constructor-arg> 
+		</beans:bean> -->
+
 	<!-- Login and Auth Interceptor -->
 	<beans:bean id="authInterceptor" class="org.snj.util.AuthInterceptor"></beans:bean>
 	<beans:bean id="loginInterceptor" class="org.snj.util.LoginInterceptor"></beans:bean>
@@ -74,7 +74,16 @@
 		</interceptor>
 
 	</interceptors>
-	
+
+	<beans:bean id="chatHandler" class="org.snj.util.ChatHandler" />
+
+	<websocket:handlers>
+		<websocket:mapping handler="chatHandler" path="/chat-ws" />
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.snj.util.WebsocketHandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+	</websocket:handlers>
+
 	<beans:bean id="naverLoginBO" class="org.snj.util.NaverLoginBO" />
-	
+
 </beans:beans>

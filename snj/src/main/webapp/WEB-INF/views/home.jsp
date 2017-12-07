@@ -57,10 +57,13 @@ video {
 	<video autoplay loop poster="img.jpg">
 		<c:choose>
 			<c:when test="${now%2==0}">
-				<source id="#video-1" src="http://siwoo1620.cafe24.com/down/bgm(rap).mp4" type="video/mp4">
+				<source id="#video-1"
+					src="http://siwoo1620.cafe24.com/down/bgm(rap).mp4"
+					type="video/mp4">
 			</c:when>
 			<c:when test="${now%2==1}">
-				<source id="#video-2" src="http://siwoo1620.cafe24.com/down/C-ute.mp4" type="video/mp4">
+				<source id="#video-2"
+					src="http://siwoo1620.cafe24.com/down/C-ute.mp4" type="video/mp4">
 			</c:when>
 		</c:choose>
 	</video>
@@ -90,13 +93,15 @@ video {
 						<li><a class="page-scroll" href="/user/login">Log_In</a></li>
 						<li><a class="page-scroll" href="/user/createUser">Membership</a></li>
 					</c:if>
+					<c:if test="${not empty login}">
+						<li><a class="page-scroll" href="#chat" id="chat">Chatting</a></li>
+					</c:if>
 					<c:choose>
 						<c:when test="${not empty login && grade eq 'A'}">
 							<li><a class="page-scroll" href="/user/passChk">Members</a></li>
 						</c:when>
 						<c:when test="${not empty login && grade ne 'A'}">
-							<li><a class="page-scroll"
-								href="/user/passChk">
+							<li><a class="page-scroll" href="/user/passChk">
 									<h5 class="bottombrand wow flipInX">${login.uname}</h5>
 							</a></li>
 						</c:when>
@@ -178,7 +183,7 @@ video {
 		</a>
 	</div>
 	<div class="clearfix"></div>
-	
+
 	<!-- Section Testimonials
 ================================================== -->
 	<section id="testimonials">
@@ -191,12 +196,10 @@ video {
 						<ol class="carousel-indicators">
 							<li data-target="#quote-carousel" data-slide-to="0"
 								class="active"><img class="img-responsive "
-								src="http://siwoo1620.cdn3.cafe24.com/siwoo27.jpg"
-								alt=""></li>
+								src="http://siwoo1620.cdn3.cafe24.com/siwoo27.jpg" alt=""></li>
 							<li data-target="#quote-carousel" data-slide-to="1"><img
 								class="img-responsive"
-								src="http://siwoo1620.cdn3.cafe24.com/siwoo24.jpg"
-								alt=""></li>
+								src="http://siwoo1620.cdn3.cafe24.com/siwoo24.jpg" alt=""></li>
 						</ol>
 						<!-- Carousel Slides / Quotes -->
 						<div class="carousel-inner text-center">
@@ -205,12 +208,11 @@ video {
 								<blockquote>
 									<div class="row">
 										<div class="col-sm-8 col-sm-offset-2">
-											<p>한참 모델한다고 다이어트 했던 그 때의 나, 지금 생각해 보면&nbsp;&nbsp;'더 노력했으면 
+											<p>한참 모델한다고 다이어트 했던 그 때의 나, 지금 생각해 보면&nbsp;&nbsp;'더 노력했으면
 												어땠을까'&nbsp;&nbsp;라는 생각을 가끔 해 본다. 지금 IT계열로 가는 것에 대한 후회는 별로
-												없다. 일본으로 IT취업을 했을 당시에도 좀 더 외국에서 일하는 한국 사람의 
-												자세로 임했다면 하는 아쉬움도 있지만, 그러한 경험들이 하나씩 쌓여 지금의
-												내가 되었고, 그만큼의 인연들도 생겼기에 멍하니 멈춰 서 있지 않고,
-												하나씩 나아가고 있다.　頑張れ、シウーくん！</p>
+												없다. 일본으로 IT취업을 했을 당시에도 좀 더 외국에서 일하는 한국 사람의 자세로 임했다면 하는 아쉬움도
+												있지만, 그러한 경험들이 하나씩 쌓여 지금의 내가 되었고, 그만큼의 인연들도 생겼기에 멍하니 멈춰 서 있지
+												않고, 하나씩 나아가고 있다. 頑張れ、シウーくん！</p>
 											<small>27살의 나</small>
 										</div>
 									</div>
@@ -222,13 +224,11 @@ video {
 									<div class="row">
 										<div class="col-sm-8 col-sm-offset-2">
 											<p>ようこそーシウーと日本のブログに〜別に見る事はありませんですけど、
-												訪問してくれてありがとうございます。私は昼より夜がもっと好きで
-												そんな理由は夜空に浮かんでいる月を見るのが好きだかです。
+												訪問してくれてありがとうございます。私は昼より夜がもっと好きで そんな理由は夜空に浮かんでいる月を見るのが好きだかです。
 												その以外ものは日本の文化を好き、猫も好き、音楽を聞き事も好きです。
 												まあ〜ホラーもとっても好きだから、その部分もあのブログに色々な情報が
-												ありますから、ちゃんとご覧でください。日本の名所もドンドンアップ
-												するつもりです。とぞ、よろしく！</p>
-												
+												ありますから、ちゃんとご覧でください。日本の名所もドンドンアップ するつもりです。とぞ、よろしく！</p>
+
 											<small>24歳の僕</small>
 										</div>
 									</div>
@@ -268,8 +268,8 @@ video {
 						</div>
 						<form method="post" action="/sendMail" id="mail" class="text-left">
 							<input name="name" type="text" class="col-md-6 norightborder"
-								placeholder="Your Name *" required="required" id="focus"> <input
-								name="email" type="email" class="col-md-6"
+								placeholder="Your Name *" required="required" id="focus">
+							<input name="email" type="email" class="col-md-6"
 								placeholder="E-mail address *">
 							<textarea name="comment" class="col-md-12"
 								placeholder="Message *"></textarea>
@@ -289,7 +289,7 @@ video {
 	<!-- Section Menu(Modal)
 ====================================================================================================================================================== -->
 
-	<div class="modal fade">
+	<div class="modal fade" id="menu">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -380,7 +380,17 @@ video {
 			</div>
 		</div>
 	</div>
-
+	
+	<div class="modal fade" id="modal-chat">
+		<div class="modal-dialog">
+			<div class="modal-content"></div>
+		</div>
+	</div>
+<!-- 	<div class="modal" id="modal-chat" aria-hidden="true" style="display: none; z-index: 1050;">
+		<div class="modal-dialog">
+			<div class="modal-content"></div>
+		</div>
+	</div> -->
 	<!-- Section Footer
 ====================================================================================================-->
 	<section id="social" class="parallax parallax-image"
@@ -454,9 +464,14 @@ video {
 
 		$(function() {
 			$("#Menu").click(function() {
-				$('div.modal').modal();
+				$('#menu').modal();
 			})
-		})
+			$("#chat").click(function() {
+				$('#modal-chat').modal({
+					remote : '/chat/form'
+				});
+			});
+		});
 	</script>
 
 	<!-- jQuery -->
