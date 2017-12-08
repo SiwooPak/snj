@@ -386,11 +386,7 @@ video {
 			<div class="modal-content"></div>
 		</div>
 	</div>
-<!-- 	<div class="modal" id="modal-chat" aria-hidden="true" style="display: none; z-index: 1050;">
-		<div class="modal-dialog">
-			<div class="modal-content"></div>
-		</div>
-	</div> -->
+
 	<!-- Section Footer
 ====================================================================================================-->
 	<section id="social" class="parallax parallax-image"
