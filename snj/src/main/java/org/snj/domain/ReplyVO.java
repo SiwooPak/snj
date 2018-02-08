@@ -2,14 +2,15 @@ package org.snj.domain;
 
 import java.util.Date;
 
+//게시글의 댓글
 public class ReplyVO {
 
-	private Integer rno;
-	private Integer bno;
-	private String rcontent;
-	private String rwriter;
-	private Date regdate;
-	private Date updatedate;
+	private Integer rno; //댓글번호
+	private Integer bno; //게시글번호
+	private String rcontent; //댓글 내용
+	private String rwriter; //댓글 작성자
+	private Date regdate; //댓글 등록일
+	private Date updatedate; //댓글 수정일
 
 	public Integer getRno() {
 		return rno;
