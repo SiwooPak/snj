@@ -1,11 +1,11 @@
 package org.snj.domain;
 
 import java.util.Date;
-
+//업로드
 public class AttachVO {
-	private int bno;
-	private String fullname;
-	private Date regdate;
+	private int bno; //업로드된 글번호
+	private String fullname; //업로드 된 파일명
+	private Date regdate; //업로드 날짜
 	
 	public AttachVO() {
 		super();
