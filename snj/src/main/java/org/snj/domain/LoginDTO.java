@@ -1,11 +1,11 @@
 package org.snj.domain;
-
+//로그인
 public class LoginDTO {
 
-	private String u_id;
-	private String upw;
-	private String uname;
-	private boolean useCookie;
+	private String u_id; //아이디
+	private String upw; //비밀번호
+	private String uname; //유저명
+	private boolean useCookie; //자동로그인
 
 	public String getU_id() {
 		return u_id;
