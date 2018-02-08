@@ -27,14 +27,15 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Transactional
 	@Override
+	//게시글 등록
 	public void regist(Map map) throws Exception {
 		BoardVO vo = (BoardVO) map.get("board");
 		dao.create(vo);
 		
-		int bno = dao.listTop(vo.getTitle());
-		System.out.println("============================");
-		System.out.println(bno);
-		System.out.println("============================");
+		int bno = dao.listTop(vo.getTitle());//게시글번호 가져오기, 업로드 파일 있을시 필요
+		//System.out.println("============================");
+		//System.out.println(bno);
+		//System.out.println("============================");
 		
 		//작성자 포인트
 		String u_id = (String) map.get("u_id");
@@ -109,6 +110,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<String> getAttach(int bno) throws Exception {
+		//게시글의 업로도 파일 가져오기.
 		return dao.getAttach(bno);
 	}
 
