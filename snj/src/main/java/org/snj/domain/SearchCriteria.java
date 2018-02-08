@@ -1,9 +1,11 @@
 package org.snj.domain;
+
+//게시판 검색
 public class SearchCriteria extends Criteria{
 
-	private String searchType;
-	private String keyword;
-	private String category;
+	private String searchType; //검색의 종류
+	private String keyword; //검색 단어
+	private String category; //검색하는 게시판의 종류
 	
 	public String getSearchType() {
 		return searchType;
