@@ -1,7 +1,7 @@
 package org.snj.domain;
 
 import java.util.Date;
-
+//유저
 public class UserVO {
 
 	private String u_id; //아이디
