@@ -1,16 +1,16 @@
 package org.snj.domain;
 
 import java.util.Date;
-
+//방명록
 public class GuestBookVO {
-	private int gbno;
-	private String writer;
-	private String content;
-	private String regdate;
-	private String pass;
-	private int grpno;
-	private int ansnum;
-	private int commentCnt;
+	private int gbno; //방명록 글번호
+	private String writer; //작성자
+	private String content; //내용
+	private String regdate; //등록날짜
+	private String pass; //비밀번호
+	private int grpno; //그룹번호
+	private int ansnum; //0일시 좌에, 1일시 우에
+	private int commentCnt; //방명록 답글수
 	
 	public GuestBookVO() {
 		super();
