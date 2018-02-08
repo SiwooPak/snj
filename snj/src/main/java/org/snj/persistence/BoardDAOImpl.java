@@ -11,14 +11,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class BoardDAOImpl implements BoardDAO {
-
+	//MyBatis 매핑	
 	@Autowired
 	private SqlSessionTemplate mybatis;
 
 	public void setMybatis(SqlSessionTemplate mybatis) {
 		this.mybatis = mybatis;
 	}
-
+	
 	@Override
 	public void create(BoardVO vo) throws Exception {
 		mybatis.insert("board.create", vo);
