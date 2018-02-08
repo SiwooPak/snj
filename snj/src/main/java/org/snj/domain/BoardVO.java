@@ -2,19 +2,19 @@ package org.snj.domain;
 
 import java.util.Arrays;
 import java.util.Date;
-
+//게시판
 public class BoardVO {
 	
-	private Integer bno;
-	private String title;
-	private String content;
-	private String writer;
-	private Date regdate;
-	private int viewcnt;
-	private int replycnt;
-	private String categorycd;
-	private String thumb;
-	private String[] files;
+	private Integer bno; //게시글 번호
+	private String title; //게시글 제목
+	private String content; //게시글 내용
+	private String writer; //게시글 작성자
+	private Date regdate; //게시글 등록 날짜
+	private int viewcnt; //게시글 조회수
+	private int replycnt; //게시글의 댓글수
+	private String categorycd; //게시글의 카테고리
+	private String thumb; // 썸네일 이미지
+	private String[] files; // 업로드된 파일이름들
 	
 	public String[] getFiles() {
 		return files;
