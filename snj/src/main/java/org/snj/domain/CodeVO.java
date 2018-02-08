@@ -1,9 +1,9 @@
 package org.snj.domain;
-
+//카테고리
 public class CodeVO {
-	private String commCode;
-	private String commCd;
-	private String commCdNm;
+	private String commCode; //코드
+	private String commCd; //게시판 코드번호
+	private String commCdNm; //게시판 이름
 	public String getCommCode() {
 		return commCode;
 	}
