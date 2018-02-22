@@ -73,7 +73,7 @@ public class BoardController {
 
 		return "/board/list";
 	}
-
+	//상세 읽기
 	@RequestMapping(value = "/readPage", method = RequestMethod.GET)
 	public void read(@RequestParam("bno") int bno, @ModelAttribute("cri") SearchCriteria cri, Model model,
 			HttpServletRequest request) throws Exception {
@@ -82,7 +82,7 @@ public class BoardController {
 		System.out.println("=========================");
 		model.addAttribute(service.read(bno));
 	}
-
+	// 글 삭제
 	@RequestMapping(value = "/removePage", method = RequestMethod.POST)
 	public String remove(@RequestParam("bno") int bno, String writer, SearchCriteria cri, 
 			RedirectAttributes rttr)
@@ -91,7 +91,7 @@ public class BoardController {
 		paramMap.put("bno", bno);
 		paramMap.put("writer", writer);
 		service.remove(paramMap);
-
+		//삭제후 페이징 처리
 		rttr.addAttribute("page", cri.getPage());
 		rttr.addAttribute("perPageNum", cri.getPerPageNum());
 		rttr.addAttribute("searchType", cri.getSearchType());
@@ -101,7 +101,7 @@ public class BoardController {
 
 		return "redirect:/board/list";
 	}
-
+	//글 수정페이지로 이동.
 	@RequestMapping(value = "/modifyPage", method = RequestMethod.GET)
 	public void modifyPagingGET(int bno, @ModelAttribute("cri") SearchCriteria cri, Model model) throws Exception {
 
@@ -114,13 +114,13 @@ public class BoardController {
 
 		model.addAttribute("dsCode1", dsCode1);
 	}
-
+	// 글 수정.
 	@RequestMapping(value = "/modifyPage", method = RequestMethod.POST)
 	public String modifyPagingPOST(BoardVO vo, SearchCriteria cri, RedirectAttributes rttr) throws Exception {
 
 		logger.info(cri.toString());
 		service.modify(vo);
-
+		//페이징 처리 
 		rttr.addAttribute("page", cri.getPage());
 		rttr.addAttribute("perPageNum", cri.getPerPageNum());
 		rttr.addAttribute("searchType", cri.getSearchType());
@@ -132,7 +132,7 @@ public class BoardController {
 
 		return "redirect:/board/list";
 	}
-
+	// 글 등록 페이지로 이동.
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public void registGET(Model model, HttpServletRequest request) throws Exception {
 
@@ -148,7 +148,7 @@ public class BoardController {
 		model.addAttribute("dsCode1", dsCode1);
 		model.addAttribute("category", category);
 	}
-
+	// 글 등록.
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String registPOST(BoardVO vo, String writer, HttpServletRequest request, RedirectAttributes rttr)
 			throws Exception {
@@ -157,6 +157,7 @@ public class BoardController {
 		logger.info(vo.toString());
 		String category = request.getParameter("category");
 		System.out.println(category);
+		//동영상 게시판인 경우 동영상주소만 분리해서 데이터베이스에 저장.
 		if (category.equals("M")) {
 			String content = vo.getContent();
 			// System.out.println("content: "+content);
