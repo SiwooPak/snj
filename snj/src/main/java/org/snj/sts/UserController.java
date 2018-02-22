@@ -223,18 +223,20 @@ public class UserController {
 	@RequestMapping(value = "/idCheck", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> idCheck(HttpServletRequest request) throws Exception {
+		//입력받은 id 값을 받아서 그 id가 데이터베이스 있는지 없는지 확인.
 		String id = request.getParameter("id");
 		UserVO vo = service.retrieveUser(id);
+		//기본 메시지
 		String checkMsg = "<font color='green' size='3px;'><i class='fa fa-check'>&nbsp;사용가능한 아이디 입니다.</i></font>@true";
-
+		//데이터 베이스에 있을 겨우
 		if (vo != null) {
 			checkMsg = "<font color='red' size='3px;'><i class='fa fa-times'>&nbsp;동일한 아이디가 존재합니다.</i></font>@false";
 		}
-
+		//id를 입력안할시
 		if (id == null || id.equals("")) {
 			checkMsg = "<font color='red' size='3px;'><i class='fa fa-times'>&nbsp;아이디를 입력하세요.</i></font>@false";
 		}
-
+		//결과값 전달.
 		HttpHeaders resHeader = new HttpHeaders();
 		resHeader.add("Content-Type", "text/html;charset=UTF-8");
 		ResponseEntity<String> resultMsg = new ResponseEntity<String>(checkMsg, resHeader, HttpStatus.OK);
@@ -299,12 +301,13 @@ public class UserController {
 
 		return filename;
 	}
-
+	
+	//id찾기 페이지 이동.
 	@RequestMapping(value = "/idFind", method = RequestMethod.GET)
 	public String idFind() {
 		return "/user/idFind";
 	}
-
+	//id찾기 구현. 자신의 이메일 값을 입력시 id값 전달.
 	@RequestMapping(value = "/user/retrieveUserId", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Map<String, String>> retrieveUserId(HttpServletRequest request) throws Exception {
@@ -315,7 +318,7 @@ public class UserController {
 		Map<String, String> idMap = new HashMap<String, String>();
 
 		if (id == null) {
-			checkMsg = "<div class='col-md-5 col-md-offset-2'>" + "<p>사용가능한 ID</p>" + "</div>";
+			checkMsg = "<div class='col-md-5 col-md-offset-2'>" + "<p>ID가 없습니다.</p>" + "</div>";
 		} else {
 			checkMsg = "<div class='col-md-5 col-md-offset-2'>" + "<p>ID는<font color='red'><strong>" + id
 					+ "</strong></font>입니다." + " <a href='./login'>로그인 화면으로</a>|<a href='./pwFind'>PW찾기</a></p>"
@@ -331,12 +334,12 @@ public class UserController {
 		return resultMsg;
 	}
 
-	// 패스워드 찾기 페이지
+	// 패스워드 찾기 페이지로 이동.
 	@RequestMapping(value = "/pwFind", method = RequestMethod.GET)
 	public String pwFind() {
 		return "/user/pwFind";
 	}
-
+	// id, email 값을 가지고 패스워드를 찾는다.
 	@RequestMapping(value = "/retrieveUserPw", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Map<String, String>> retrieveUserPw(HttpServletRequest request) throws Exception {
@@ -348,7 +351,7 @@ public class UserController {
 		Map<String, String> idMap = new HashMap<String, String>();
 
 		if (pw == null) {
-			checkMsg = "<div class='col-md-5 col-md-offset-2'>" + "<p>등록된 이메일이 아닙니다. 다시 입력하세요.</p>" + "</div>";
+			checkMsg = "<div class='col-md-5 col-md-offset-2'>" + "<p>등록된 Email과ID가 아닙니다. 다시 입력하세요.</p>" + "</div>";
 		} else {
 			checkMsg = "<div class='col-md-4 col-md-offset-2'>" + "<p>패스워드는&nbsp;<font color='blue'><strong>" + pw
 					+ "</strong></font>입니다." + " <a href='./login'>로그인 화면으로</a></p>" + "</div>";
