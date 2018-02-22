@@ -5,6 +5,7 @@
 <%@include file="../template/header.jsp"%>
 
 <style>
+//File Drop zone  
 .fileDrop {
 	width: 100%;
 	height: 150px;
@@ -71,6 +72,7 @@
 							<select
 								class="form-control" id="productCategoryCd" name="categorycd"
 								required onchange="fn_setProductCategoryCd()" readonly="readonly">
+								//게시판의 카테고리키를 가져와서 자동으로 설정.
 								<option>카테고리를 지정해주세요.</option>
 								<c:forEach items="${dsCode1}" var="code1">
 									<c:choose>
@@ -152,7 +154,7 @@
 <script type="text/javascript" src="${root}/resources/js/upload.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
-
+<!-- handlebars 템플릿을 사용하여 업로드 파일 등록시 페이지에 비동기로 보여짐 -->
 <script id="template" type="text/x-handlebars-template">
 <li>
   <span class="mailbox-attachment-icon has-img"><img src="{{imgsrc}}" alt="Attachment"></span>
@@ -197,6 +199,8 @@
 			}
 		});
 	});
+	//업로드 파일 목록에서 x버튼 클릭시  
+	});
 	$(".uploadedList").on("click", ".delbtn", function(event) {
 		event.preventDefault();
 		var that = $(this);
@@ -236,6 +240,7 @@
 		self.location = "/board/list?category=${category}";
 	});
 </script>
+<!-- ckeditor 사용  -->
 <script type="text/javascript" src="${root}/ckeditor/ckeditor.js"></script>
 <script type="text/JavaScript">
 	window.onload = function() {
