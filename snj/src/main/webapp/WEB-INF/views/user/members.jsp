@@ -5,7 +5,7 @@
 
 
 <%@include file="../template/header.jsp"%>
-
+<!-- 회원목록 페이지 -->
 <!-- Main content -->
 <section class="content">
 	<div class="row">
@@ -17,6 +17,7 @@
 				</div>
 
 				<div class='box-body' style='margin-top:10px;'>
+				<!-- 검색부분 -->
 					<select name="searchType">
 						<option value="n"
 							<c:out value="${cri.searchType == null?'selected':''}"/>>
@@ -108,7 +109,7 @@
 
 
 				<div class="box-footer">
-
+				<!-- 페이징 처리부분 -->
 					<div class="text-center">
 						<ul class="pagination">
 
@@ -142,6 +143,7 @@
 	<!-- /.row -->
 	
 	<!-- Modal -->
+	<!-- 회원등업시 modal 사용 -->
 	<div id="modal" class="modal fade" role="dialog" tabindex="-1">
 		<div class="modal-dialog">
 			<!-- Modal content-->
@@ -183,6 +185,7 @@
 	
 	$(document).ready(
 			function() {
+ 				//검색 버튼 클릭시
 				$('#searchBtn').on("click",function(event) {
 					self.location = "list"
 					+ '${pageMaker.makeQuery(1)}'
@@ -190,6 +193,7 @@
 					+ $("select option:selected").val()
 					+ "&keyword=" + $('#keywordInput').val()
 				});
+				//등업 버튼 클릭시
 				$("#upBtn").on("click", function() {
 					var u_id = $("#user_Id").text();
 
@@ -216,6 +220,7 @@
 						}
 					});
 				});
+				//회원 추방 버튼 클릭시
 				$("#byeBtn").on("click", function() {
 					var u_id = $("#user_Id").text();
 
