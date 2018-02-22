@@ -79,28 +79,29 @@ public class PageMaker {
 	public Criteria getCri() {
 		return cri;
 	}
-	
+	//현재 목록페이지 처리부분.
 	public String makeQuery(int page){
-		
+		//UriComponentsBuilder 와 UriComponets를 이용하여 구현함. 
+		//queryParam()를 이용하여 페이징처리시 필요한 데이터 설정.
 		UriComponents uriComponents =
 	            UriComponentsBuilder.newInstance()
-	            .queryParam("page", page)
-	            .queryParam("perPageNum", cri.getPerPageNum())
-	            .queryParam("category", ((SearchCriteria)cri).getCategory())
+	            .queryParam("page", page) //현재 페이지 번호
+	            .queryParam("perPageNum", cri.getPerPageNum())//1 페이지당 출력될 글 갯수
+	            .queryParam("category", ((SearchCriteria)cri).getCategory())//게시판의 카테고리
 	            .build();	            
 		
 		return uriComponents.toUriString();
 	}
-
+	//검색이나 페이지 이동시 목록 페이지 처리 부분
 	public String makeSearch(int page){
 		
 		UriComponents uriComponents =
 	            UriComponentsBuilder.newInstance()
-	            .queryParam("page", page)
-	            .queryParam("perPageNum", cri.getPerPageNum())
-	            .queryParam("searchType", ((SearchCriteria)cri).getSearchType())
-	            .queryParam("keyword", ((SearchCriteria)cri).getKeyword())
-	            .queryParam("category", ((SearchCriteria)cri).getCategory())
+	            .queryParam("page", page) // 현재 페이지 번호
+	            .queryParam("perPageNum", cri.getPerPageNum()) // 1페이지당 출력할 글의 갯수
+	            .queryParam("searchType", ((SearchCriteria)cri).getSearchType()) //검색의 종류
+	            .queryParam("keyword", ((SearchCriteria)cri).getKeyword()) //검색 키워드
+	            .queryParam("category", ((SearchCriteria)cri).getCategory()) // 카테고리
 	            .build();	            
 		
 		return uriComponents.toUriString();
