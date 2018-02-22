@@ -82,28 +82,34 @@ public class UserController {
 		/* 네이버 로그인 성공 페이지 View 호출 */
 		return "/user/naverSuccess";
 	}
-
+ 	//회원정보 및 회원목록 페이지 이동시 비밀번호 확인 페이지로 이동.
 	@RequestMapping(value = "/passChk", method = RequestMethod.GET)
 	public String passChk() {
 		return "/user/passChk";
 	}
-
+	
+	//패스워드 확인.
 	@RequestMapping(value = "/passChkProc", method = RequestMethod.POST)
 	public void passChk(String upw, HttpSession session, Model model) throws Exception {
 		String grade = "";
+		//세션에 있는 로그인 정보를 object에 담아둔다.
 		Object obj = session.getAttribute("login");
+		//로그인 했을 시
 		if (obj != null) {
+			//UserVO타입으로 형변환.
 			UserVO vo = (UserVO) obj;
+			//ID값과 패스워드 값을 담아둘 Map생성.
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("id", vo.getU_id());
 			paramMap.put("pass", upw);
+			//패스워드 체크 후 등급을 가져와서 회원 등급에 따라 회원정보 혹은 회원목록 페이지로 이동.
 			if (service.passCheck(paramMap)) {
 				grade = service.getUserGrade(vo.getU_id());
 				model.addAttribute("grade", grade);
 			} 
 		}
 	}
-
+	//운영자인 경우 회원목록 페이지로.
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String userList(@ModelAttribute("cri") SearchCriteria cri, Model model, HttpSession session)
 			throws Exception {
@@ -113,7 +119,7 @@ public class UserController {
 		List<UserVO> list = service.userList(cri);
 
 		model.addAttribute("list", list);
-
+		//페이징 처리 
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		pageMaker.setTotalCount(service.listSearchCount(cri));
@@ -142,12 +148,14 @@ public class UserController {
 			return "redirect:/user/updateUser";
 		}
 	}
-
+	
+	//회원 등업
 	@RequestMapping(value = "/{u_id}", method = { RequestMethod.PUT, RequestMethod.PATCH })
 	@ResponseBody
 	public ResponseEntity<String> gradeUp(@PathVariable("u_id") String u_id) {
 		ResponseEntity<String> entity = null;
 		try {
+			//그 회원아이디를 가져와서 등업. 
 			service.gradeUp(u_id);
 
 			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
@@ -157,14 +165,15 @@ public class UserController {
 		}
 		return entity;
 	}
-
+	//회원 추방
 	@RequestMapping(value = "/{u_id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseEntity<String> userBye(@PathVariable("u_id") String u_id, String pass) {
 		ResponseEntity<String> entity = null;
 		try {
+			//추방할 회원정보 삭제 
 			service.userBye(u_id);
-
+			//메세지 전달.
 			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -172,12 +181,12 @@ public class UserController {
 		}
 		return entity;
 	}
-
+	//로그인 페이지로 이동.
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView loginGET() {
 		return new ModelAndView("/user/login");
 	}
-
+	//로그인 시 모델에 유저 정보와 로그인 정보 기억을 체크하면 일주일동안 로그인 유지.
 	@RequestMapping(value = "/loginProc", method = RequestMethod.POST)
 	public void loginPOST(LoginDTO dto, HttpSession session, Model model) throws Exception {
 		UserVO vo = service.login(dto);
@@ -193,24 +202,25 @@ public class UserController {
 			service.keepLogin(vo.getU_id(), session.getId(), sessionLimit);
 		}
 	}
-
+	//로그아웃
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws Exception {
 
 		logger.info("logout.................................1");
-
+		//로그인정보를 Object에 담는다.
 		Object obj = session.getAttribute("login");
-
+		//로그인 했을 시.
 		if (obj != null) {
 			UserVO vo = (UserVO) obj;
 			logger.info("logout.................................2");
+			//세션에 로그인 정보 제거
 			session.removeAttribute("login");
 			session.invalidate();
 
 			logger.info("logout.................................3");
 			Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
-
+			//쿠키 정보가 있을시.
 			if (loginCookie != null) {
 				logger.info("logout.................................4");
 				loginCookie.setPath("/");
@@ -222,7 +232,8 @@ public class UserController {
 
 		return "redirect:/";
 	}
-
+	
+	//아이디 동일 여부 확인 체크
 	@RequestMapping(value = "/idCheck", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> idCheck(HttpServletRequest request) throws Exception {
@@ -246,7 +257,7 @@ public class UserController {
 
 		return resultMsg;
 	}
-
+	//이메일의 동일 여부 확인.
 	@RequestMapping(value = "/emailCheck", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> emailCheck(HttpServletRequest request) throws Exception {
@@ -268,22 +279,22 @@ public class UserController {
 
 		return message2;
 	}
-
+	//회원가입 페이지로 이동.
 	@RequestMapping(value = "/createUser", method = RequestMethod.GET)
 	public String createUser() {
 		return "/user/create";
 	}
-
+	//회원가입 후 로그인 페이지로 이동
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
 	public ModelAndView createUser(@ModelAttribute("vo") UserVO vo) throws Exception {
 		ModelAndView mv = new ModelAndView();
-		vo.toString();
+		//vo.toString();
 		service.createUser(vo);
 		mv.setViewName("/user/login");
 
 		return mv;
 	}
-
+	//회원사진 업로드시.
 	@RequestMapping(value = "/saveFile", method = RequestMethod.POST, produces = "application/text; charset=utf8")
 	@ResponseBody
 	public String saveFile(HttpServletRequest request) throws IOException {
