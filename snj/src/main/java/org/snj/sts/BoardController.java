@@ -48,19 +48,22 @@ public class BoardController {
 			HttpSession session)
 			throws Exception {
 		Object obj = session.getAttribute("login");
+		// 로그인 한경우 회원등급을 가져온다, 운영자와 회원인 경우 보여지는 버튼이 다르게 하기위해
 		if (obj != null) {
 			UserVO vo = (UserVO) obj;
 			String grade = userService.getUserGrade(vo.getU_id());
 			model.addAttribute("grade", grade);
 		}
 		logger.info(cri.toString());
+		// 게시판 목록페이지를 하나로만 하여 카테고리에 따라 게시판 목록 다르게 출력하기 위해서
 		String category = request.getParameter("category");
 		cri.setCategory(category);
 		List<BoardVO> list = service.list(cri);
 		List<Map<String, String>> liveList = service.liveList(cri);
 		model.addAttribute("list", list);
 		model.addAttribute("liveList", liveList);
-
+		
+		//페이지 처리 부분
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 
