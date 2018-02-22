@@ -1,22 +1,20 @@
 //////CONTACT FORM VALIDATION
 jQuery(document).ready(function ($) {
 	
-	//if submit button is clicked
+	//submit 버튼 클릭시
 	$('#mail').submit(function(event) {		
-		//event.preventDefault();
+		//이벤트 초기화
 		var $form = $(this);
 		var $button = $form.find('button');
 		
-		//Get the data from all the fields
+		//form 안의 데이터들 가져오기.
 		var name = $('input[name=name]');
 		var email = $('input[name=email]');
 		var regx = /^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,4})$/i;
 		var comment = $('textarea[name=comment]');
 		var returnError = false;
 		
-		//Simple validation to make sure user entered something
-		//Add your own error checking here with JS, but also do some error checking with PHP.
-		//If error found, add hightlight class to the text field
+		//값 검증 부분
 		if (name.val()=='') {
 			name.addClass('error');
 			returnError = true;
@@ -38,38 +36,37 @@ jQuery(document).ready(function ($) {
 			returnError = true;
 		} else comment.removeClass('error');
 		
-		// Highlight all error fields, then quit.
+		// 필드값들이 모든 에러가 날 시 빠져나옴.
 		if(returnError == true){
 			return false;	
 		}
 		
-		//organize the data
+		//데이터 정리
 		
 		var data = 'name=' + name.val() + '&email=' + email.val() + '&comment='  + encodeURIComponent(comment.val());
 
-		//disabled all the text fields
+		//모든 텍스트 필드 비활성화
 		$('.text').attr('disabled','true');
 		
-		//show the loading sign
 		$('.loading').show();
 		
-		//start the ajax
+		//ajax 부분
 		$.ajax({
-			//this is the php file that processes the data and sends email
+			//url, type, data 값들은 home.jsp의 mail세션 부분에 구현. 
 			url: $form.attr('action'),	
 			type: $form.attr('method'),		
 			data: $form.serialize() + '&delay=1',		
-			//before send
+			//메일 보내기 전 submit 버튼 활성화.
 			beforeSend: function(xhr,settings){
 				//Button Disabled
 				$button.attr('disabled',true);
 			},
-			//after send
+			//메일 보낸 후, submit 버튼 비활성화.
 			complete: function(xhr,textStatus) {
 				//Button Activing Allow for resend
 				$button.attr('disabled', false);
 			},
-			//success
+			//성공시 필드값 초기화
 			success: function (result) {				
 				$form[0].reset();
 			},
