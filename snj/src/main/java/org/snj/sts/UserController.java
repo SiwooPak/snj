@@ -121,7 +121,8 @@ public class UserController {
 		return "/user/members";
 
 	}
-
+	
+	//회원 정보수정 
 	@RequestMapping(value = "/user/updateUser", method = { RequestMethod.GET, RequestMethod.POST })
 	public String updateUser(@ModelAttribute UserVO vo, HttpSession session, 
 			Model model, RedirectAttributes rttr) throws Exception {
@@ -131,10 +132,12 @@ public class UserController {
 		String flag = vo.getUname();
 		System.out.println("이름: " + flag);
 		UserVO user = service.retrieveUser(id);
+		//flag 값이 없을시 유저 정보를 가져와서 모델의user 정보를 담아서 memberInfo페이지에 전달.
 		if (flag == null) {
 			model.addAttribute("user", user);
 			return "/user/memberInfo";
 		} else {
+		//회원 정보 수정 후의 다시 회원정보 페이지로 이동.
 			service.updateUser(vo);
 			return "redirect:/user/updateUser";
 		}
