@@ -4,12 +4,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="board">
-	
+	//글 등록
 	<insert id="create">
 		insert into tbl_board (title, content, writer, categorycd, thumb)
 		values(#{title},#{content}, #{writer}, #{categorycd}, #{thumb})
 	</insert>
-
+	//상세 읽기
 	<select id="read" resultType="BoardVO">
 		select
 		bno, title, content, writer, categorycd,
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		tbl_board
 		where bno = #{bno}
 	</select>
-
+	//글 수정
 	<update id="update">
 		update tbl_board 
 		set 
@@ -29,32 +29,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>	
 		where bno = #{bno}
 	</update>
-
+	// 글 삭제
 	<delete id="delete">
 		delete from tbl_board where bno = #{bno}
 	</delete>
-
+	//검색  
 	<sql id="search">
 		<if test="searchType != null">
+			//제목
 			<if test="searchType == 't'.toString()">
 				and title like CONCAT('%', #{keyword}, '%')
 			</if>
+			//내용
 			<if test="searchType == 'c'.toString()">
 				and content like CONCAT('%', #{keyword}, '%')
 			</if>
+			//작성자
 			<if test="searchType == 'w'.toString()">
 				and writer like CONCAT('%', #{keyword}, '%')
 			</if>
+			//제목과 내용
 			<if test="searchType == 'tc'.toString()">
 				and ( title like CONCAT('%', #{keyword}, '%') OR content
 				like
 				CONCAT('%', #{keyword}, '%'))
 			</if>
+			//내용과 작성자
 			<if test="searchType == 'cw'.toString()">
 				and ( content like CONCAT('%', #{keyword}, '%') OR writer
 				like
 				CONCAT('%', #{keyword}, '%'))
 			</if>
+			//제목, 내용, 작성자
 			<if test="searchType == 'tcw'.toString()">
 				and ( title like CONCAT('%', #{keyword}, '%')
 				OR
@@ -66,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 		</if>
 	</sql>
-	
+	//생생정보통 이외의 게시판의 목록
 	<select id="list" resultType="BoardVO">
 		<![CDATA[  
 		  SELECT board.bno, board.title, board.content, board.writer, board.categorycd 
@@ -86,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  limit #{pageStart}, #{perPageNum}
 		]]>
 	</select>
-	
+	//생생 정보통 게시판의 목록 
 	<select id="liveList" resultType="map">
 	<![CDATA[  
 		SELECT board.bno, board.title, board.content, board.writer, board.categorycd 
@@ -108,7 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  limit #{pageStart}, #{perPageNum}
 		]]>
 	</select>
-	
+	//게시판의 등록글의 총갯수
 	<select id="listSearchCount" resultType="int">
 		<![CDATA[  
 		  select count(bno) 
@@ -119,34 +125,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 
-
+	//댓글 수 
 	<update id="updateReplyCnt">
 		update tbl_board set replycnt = replycnt + #{amount} where bno = #{bno}
 	</update>
 
-
+	//조회수 업
 	<update id="updateViewCnt">
 		update tbl_board set viewcnt = viewcnt +1 where bno = #{bno}
 	</update>
-
+	//업로드 파일이 있을시 게시판 번호와 파일이름 저장	
 	<insert id="addAttach">
 		insert into tbl_attach(fullname, bno) values (#{fileName}, #{bno})
 	</insert>
 
-
+	//업로드 파일 정보 가져오기.
 	<select id="getAttach" resultType="string">
 		select fullname from tbl_attach where bno = #{bno} order by regdate
 	</select>
 
-
+	//업로드 파일 삭제
 	<delete id="deleteAttach">
 		delete from tbl_attach where bno = #{bno}
 	</delete>
-
+	//업로드 파일 수정
 	<insert id="replaceAttach">
 		insert into tbl_attach(fullname, bno) values (#{fullName}, #{bno})
 	</insert>
-	
+	//게시판의 카테고리 가져오기.
 	<select id="categoryList" resultType="Map">
 		SELECT t.categorycd
 			FROM
