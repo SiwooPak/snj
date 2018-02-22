@@ -14,6 +14,7 @@
 	$(function() {
 		//fn_init();
 		imageFolder = "${root}/resources/img/user/";
+		//datepicker를 이용한 생년월일 입력 설정.
 		$("#birth").datepicker({
 			dateFormat : 'yy-mm-dd',
 			changeMonth : true,
@@ -22,7 +23,7 @@
 		});
 		fn_setDetailInfo();
 	});
-
+	//저장된 정보 필드값에 세팅.
 	function fn_setDetailInfo() {
 		$("#id").val('${user.u_id}');
 		$("#pw").val('${user.upw}');
@@ -46,7 +47,7 @@
 		console.log(userImage);
 		$("#point").text("${user.upoint} point");
 	}
-
+	//메일 정보 수정시 동일한 메일 있는지 체크하는 부분.
 	function mailCheck() {
 		var email = $("#e_mail").val();
 		var access = $("#message2");
@@ -60,7 +61,7 @@
 			}
 		});
 	}
-
+	//정보 수정후 저장시 sweetAlert을 이용하여 알림창 이쁘게 구현.
 	function fn_save() {
 		//if(!fn_validation()) return;
 		/* 
@@ -87,7 +88,7 @@
 				})
 			})
 	}
-
+	//사진 업로드 부분.
 	function fn_upload() {
 		$("#ajaxform").ajaxSubmit({
 			type : "POST",
