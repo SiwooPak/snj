@@ -12,7 +12,7 @@ import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.FileCopyUtils;
-
+//업로드파일 클래스
 public class UploadFileUtils {
 	// 로그 기록 변수.
 	private static final Logger logger =
@@ -57,7 +57,7 @@ public class UploadFileUtils {
 		return datePath;
 	}
 	
-	//년원일 경로를 받아서 폴더 생성.
+	//년월일 경로를 받아서 폴더 생성.
 	private static void makeDir(String uploadPath, String... paths ) {
 		if(new File(uploadPath+paths[paths.length-1]).exists())
 			return;
