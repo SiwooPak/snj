@@ -13,8 +13,9 @@
 <title>Insert title here</title>
 <script type="text/javascript">
 	$(document).ready(function(){
+		//이메일 값을 입력후 enter키를 누르면 retrieveUserId()실행
 		$("#email").keydown(function (key){
-			if(key.keyCode == 13){
+			if(key.keyCode == 13){ //13 enter
 				retrieveUserId();
 			}
 		});
@@ -29,6 +30,7 @@
 			contentType:"application/json",
 			dataType:"json",
 			data:param,
+			//성공시 ID와 로그인화면으로 이동하는 링크와 패스워드 찾는 링크를 담은 메시지 출력.
 			success:function(result){
 				access.html(result["checkMsg"]);
 			}
@@ -54,6 +56,7 @@
 					<button class="btn btn-default" id="btnSubmit" onclick="retrieveUserId()">확인</button>
 				</div>
 			</div>
+			//결과 출력 부분.
 			<div class="form-group" id="message">
 
 			</div>
