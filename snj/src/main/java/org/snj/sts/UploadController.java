@@ -29,7 +29,7 @@ import org.snj.util.UploadFileUtils;
 public class UploadController {
 
   private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
-
+  //servlet-context.xml의 업로드 경로	
   @Resource(name = "uploadPath")
   private String uploadPath;
 
@@ -49,7 +49,7 @@ public class UploadController {
 
     return "uploadResult";
   }
-
+  //UUID를 사용하여 고유한 키값 설정	
   @RequestMapping(value = "/uploadAjax", method = RequestMethod.GET)
   public void uploadAjax() {
   }
@@ -61,13 +61,14 @@ public class UploadController {
     String savedName = uid.toString() + "_" + originalName;
 
     File target = new File(uploadPath, savedName);
-
+    //FileCoypUtils를 사용하여 파일데이터를 타겟에 저장.
     FileCopyUtils.copy(fileData, target);
 
     return savedName;
 
   }
   
+  // 파일 업로드 부분. produces속성을 사용하여 한글 정상적으로 전송.
   @ResponseBody
   @RequestMapping(value ="/uploadAjax", method=RequestMethod.POST, 
                   produces = "text/plain;charset=UTF-8")
@@ -76,7 +77,8 @@ public class UploadController {
     logger.info("originalName: " + file.getOriginalFilename());
     
    
-    return 
+    return
+	//리소스가 정상적으로 생성시 HttpStatus.CREATED 상태코드 전송.    
       new ResponseEntity<>(
           UploadFileUtils.uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes()), 
           HttpStatus.CREATED);
